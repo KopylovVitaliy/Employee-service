@@ -4,13 +4,14 @@ import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
-    private final EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -52,13 +53,17 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public List<Employee> addPlentyEmployee() {
-        List<Employee> list = List.of(
-                new Employee("Иван", 97_000),
-                new Employee("Евгений", 180_000),
-                new Employee("Владислав", 82_000),
-                new Employee("Александр", 130_000)
-        );
-        return list;
+    public void addEmployee() {
+        employeeRepository.addEmployee();
+    }
+
+    @Override
+    public Employee getEmployeeById(int id){
+        return employeeRepository.getEmployeeById(id);
+    }
+
+    @Override
+    public void deleteEmployee(int id) {
+        employeeRepository.deleteEmployee(id);
     }
 }

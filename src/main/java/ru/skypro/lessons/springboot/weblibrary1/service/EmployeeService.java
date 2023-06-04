@@ -10,5 +10,7 @@ public interface EmployeeService {
     double minSalary();
     double maxSalary();
     List<Employee> employeeHighSalary();
-    List<Employee> addPlentyEmployee();
+    void addEmployee();
+    Employee getEmployeeById(int id);
+    void deleteEmployee(int id);
 }
