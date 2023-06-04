@@ -2,9 +2,9 @@ package ru.skypro.lessons.springboot.weblibrary1.repository;
 
 import org.springframework.stereotype.Repository;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepository{
@@ -13,23 +13,50 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
             new Employee("Алиса", 109_000),
             new Employee("Алёна", 87_000),
             new Employee("Влад", 100_000));
-    private final List<Employee> employeeList1= new ArrayList<>();
+    private final HashMap<Integer, Employee> employeeMap = new HashMap<>();
     @Override
     public List<Employee> getAllEmployees() {
         return employeeList;
     }
+
+    @Override
+    public HashMap<Integer, Employee> getNewEmployees() {
+        return employeeMap;
+    }
+
     @Override
     public void addEmployee() {
-        employeeList1.addAll(employeeList);
+        Employee employee = new Employee("Полина", 91_000);
+        Employee employee1 = new Employee("Алиса", 109_000);
+        Employee employee2 = new Employee("Алёна", 87_000);
+        Employee employee3 = new Employee("Влад", 100_000);
+        employeeMap.put(employee.getId(), employee);
+        employeeMap.put(employee1.getId(), employee1);
+        employeeMap.put(employee2.getId(), employee2);
+        employeeMap.put(employee3.getId(), employee3);
+
     }
 
     @Override
     public Employee getEmployeeById(int id) {
-        return employeeList1.get(id - 1);
+        return employeeMap.get(id);
     }
 
     @Override
     public void deleteEmployee(int id) {
-        employeeList1.remove(id-1);
+        employeeMap.remove(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeRepositoryImpl that = (EmployeeRepositoryImpl) o;
+        return Objects.equals(employeeList, that.employeeList) && Objects.equals(employeeMap, that.employeeMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeList, employeeMap);
     }
 }
