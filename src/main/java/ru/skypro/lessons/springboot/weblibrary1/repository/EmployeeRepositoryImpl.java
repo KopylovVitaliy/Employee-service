@@ -15,4 +15,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
     public List<Employee> getAllEmployees() {
         return employeeList;
     }
+    @Override
+    public List<Employee> addEmployees(List<Employee> list) {
+        list.addAll(employeeList);
+        return list;
+    }
 }

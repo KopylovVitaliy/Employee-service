@@ -51,4 +51,14 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Employee> addPlentyEmployee() {
+        List<Employee> list = List.of(
+                new Employee("Иван", 97_000),
+                new Employee("Евгений", 180_000),
+                new Employee("Владислав", 82_000),
+                new Employee("Александр", 130_000)
+        );
+        return list;
+    }
 }
