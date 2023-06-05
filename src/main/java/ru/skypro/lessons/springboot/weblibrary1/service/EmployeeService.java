@@ -8,13 +8,22 @@ import java.util.Map;
 
 public interface EmployeeService {
     List<Employee> getAllEmployees();
+
     HashMap<Integer, Employee> getAllNew();
+
     double salarySum();
+
     double minSalary();
+
     double maxSalary();
+
     List<Employee> employeeHighSalary();
+
     void addEmployee();
+
     Employee getEmployeeById(int id);
+
     void deleteEmployee(int id);
+
     List<Map.Entry<Integer, Employee>> salaryHigherThan(Integer than);
 }

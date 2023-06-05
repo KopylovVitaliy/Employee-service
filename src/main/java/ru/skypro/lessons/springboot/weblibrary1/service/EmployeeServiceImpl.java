@@ -1,19 +1,22 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
+
     @Override
     public List<Employee> getAllEmployees() {
         return employeeRepository.getAllEmployees();
@@ -60,19 +63,23 @@ public class EmployeeServiceImpl implements EmployeeService{
         employeeRepository.addEmployee();
     }
 
+    @SneakyThrows
     @Override
-    public Employee getEmployeeById(int id){
+    public Employee getEmployeeById(int id) {
         return employeeRepository.getEmployeeById(id);
+
     }
 
+    @SneakyThrows
     @Override
     public void deleteEmployee(int id) {
         employeeRepository.deleteEmployee(id);
+
     }
 
     @Override
     public List<Map.Entry<Integer, Employee>> salaryHigherThan(Integer than) {
-        return  employeeRepository.getNewEmployees().entrySet().stream()
+        return employeeRepository.getNewEmployees().entrySet().stream()
                 .filter(e -> e.getValue().getSalary() > than)
                 .collect(Collectors.toList());
     }

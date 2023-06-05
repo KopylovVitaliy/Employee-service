@@ -21,43 +21,55 @@ public class EmployeeController {
     public List<Employee> showCounter() {
         return employeeService.getAllEmployees();
     }
+
     @GetMapping("/salary/sum")
-    public double getSalarySum(){
+    public double getSalarySum() {
         return employeeService.salarySum();
     }
+
     @GetMapping("/salary/min")
-    public double getSalaryMin(){
+    public double getSalaryMin() {
         return employeeService.minSalary();
     }
+
     @GetMapping("/salary/max")
-    public double getSalaryMax(){
+    public double getSalaryMax() {
         return employeeService.maxSalary();
     }
+
     @GetMapping("/salary/high-salary")
-    public List<Employee> getEmployeeHighSalary(){
+    public List<Employee> getEmployeeHighSalary() {
         return employeeService.employeeHighSalary();
     }
+
     @PostMapping
-    public void addNewEmployee(){employeeService.addEmployee();}
+    public void addNewEmployee() {
+        employeeService.addEmployee();
+    }
+
     @PutMapping("/{id}")
-    public void editEmployee(@PathVariable int id, @RequestBody Employee employee){
+    public void editEmployee(@PathVariable int id, @RequestBody Employee employee) {
         employeeService.getEmployeeById(id).setName(employee.getName());
         employeeService.getEmployeeById(id).setSalary(employee.getSalary());
     }
+
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable int id){
+    public Employee getEmployeeById(@PathVariable int id) {
         return employeeService.getEmployeeById(id);
     }
+
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable int id){
+    public void deleteEmployee(@PathVariable int id) {
         employeeService.deleteEmployee(id);
     }
+
     @GetMapping("/all-employee-new")
-    public HashMap<Integer, Employee> all (){
+    public HashMap<Integer, Employee> all() {
         return employeeService.getAllNew();
     }
+
     @GetMapping("salaryHigherThan")
-    public List<Map.Entry<Integer, Employee>> salaryHigherThan(@RequestParam("salary") Integer compareSalary){
+    public List<Map.Entry<Integer, Employee>> salaryHigherThan(@RequestParam("salary") Integer compareSalary) {
         return employeeService.salaryHigherThan(compareSalary);
     }
 }
