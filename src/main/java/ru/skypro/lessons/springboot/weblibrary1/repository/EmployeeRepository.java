@@ -20,4 +20,5 @@ int employeeHighSalary();
     List<EmployeeDTO> maxSalary();
 
 List<Employee> findEmployeeBySalaryIsGreaterThan(Integer salary);
+List<Employee> findEmployeeByPosition_Position(String position);
 }

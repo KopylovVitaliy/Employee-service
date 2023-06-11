@@ -28,4 +28,6 @@ public interface EmployeeService {
 
     List<EmployeeDTO> salaryHigherThan(Integer than);
     List<EmployeeDTO> withHighestSalary();
+    List<EmployeeDTO> getEmployee(String e);
+    EmployeeDTO getEmployeeFullInfo(int id);
 }

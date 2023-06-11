@@ -1,5 +1,8 @@
 package ru.skypro.lessons.springboot.weblibrary1.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class EmployeeDTO {
 
     private Integer id;

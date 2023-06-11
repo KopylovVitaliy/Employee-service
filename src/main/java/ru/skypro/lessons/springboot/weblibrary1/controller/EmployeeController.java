@@ -8,6 +8,7 @@ import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -67,8 +68,20 @@ public class EmployeeController {
     @GetMapping("salaryHigherThan")
     public List<EmployeeDTO> salaryHigherThan(@RequestParam("salary") Integer compareSalary) {
         return employeeService.salaryHigherThan(compareSalary);
-    }    @GetMapping("withHighestSalary")
+    }
+    @GetMapping("withHighestSalary")
     public List<EmployeeDTO> salaryWithHighestSalary() {
         return employeeService.withHighestSalary();
+    }
+    @GetMapping
+    public List<EmployeeDTO> getEmployeesForPosition(@RequestParam(required = false) String position) {
+        return employeeService.getEmployee(
+                Optional.ofNullable(position)
+                        .filter(p -> !p.isEmpty())
+                        .orElse(null));
+    }
+    @GetMapping("/{id}/fullInfo")
+    public EmployeeDTO getEmployeeFullInfo(@PathVariable int id) {
+        return employeeService.getEmployeeFullInfo(id);
     }
 }

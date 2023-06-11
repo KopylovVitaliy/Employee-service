@@ -1,5 +1,6 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
+import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -95,6 +96,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployeeById(int id) {
         return employeeRepository.findById(id)
                 .map(employeeMapper::toDto)
+                .map(employeeDTO -> {
+                    employeeDTO.setPosition(null);
+                    return employeeDTO;
+                })
                 .orElseThrow(RuntimeException::new);
 
     }
@@ -116,5 +121,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDTO> withHighestSalary(){
         return employeeRepository.maxSalary();
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployee(@Nullable String position) {
+        return Optional.ofNullable(position)
+                .map(employeeRepository::findEmployeeByPosition_Position)
+                .orElseGet(employeeRepository::findAll)
+                .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public EmployeeDTO getEmployeeFullInfo(int id) {
+        return employeeRepository.findById(id)
+                .map(employeeMapper::toDto)
+                .orElseThrow(RuntimeException::new);
+
     }
 }
