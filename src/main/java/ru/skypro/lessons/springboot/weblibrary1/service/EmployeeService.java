@@ -27,4 +27,5 @@ public interface EmployeeService {
     void deleteEmployee(int id);
 
     List<EmployeeDTO> salaryHigherThan(Integer than);
+    List<EmployeeDTO> withHighestSalary();
 }

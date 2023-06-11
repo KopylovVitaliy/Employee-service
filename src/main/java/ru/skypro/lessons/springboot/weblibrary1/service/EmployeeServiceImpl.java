@@ -53,8 +53,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDTO maxSalary() {
-        return employeeRepository.maxSalary()
-                .orElse(null);
+        List<EmployeeDTO> withHighestSalary = withHighestSalary();
+        return withHighestSalary.get(0) ;
     }
 
     @Override
@@ -112,5 +112,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .stream()
                 .map(employeeMapper::toDto)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public List<EmployeeDTO> withHighestSalary(){
+        return employeeRepository.maxSalary();
     }
 }
