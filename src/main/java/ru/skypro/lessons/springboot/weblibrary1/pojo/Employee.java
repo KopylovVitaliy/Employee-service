@@ -1,19 +1,34 @@
 package ru.skypro.lessons.springboot.weblibrary1.pojo;
 
-import java.util.Objects;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "employee")
 public class Employee {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private  String name;
     private  int salary;
-    private final Integer id;
-    private static Integer idGenerator = 1;
+    @ManyToOne
+    private Position position;
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 
     public Employee(String name, int salary) {
         this.name = name;
         this.salary = salary;
-        this.id = idGenerator++;
+
+    }
+    public Employee() {
+
     }
 
     public String getName() {
@@ -34,16 +49,7 @@ public class Employee {
     public void setSalary(int salary) {
         this.salary = salary;
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return salary == employee.salary && Objects.equals(name, employee.name) && Objects.equals(id, employee.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, salary, id);
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

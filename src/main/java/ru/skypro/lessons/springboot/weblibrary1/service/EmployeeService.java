@@ -1,5 +1,6 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
+import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 
 import java.util.HashMap;
@@ -7,23 +8,27 @@ import java.util.List;
 import java.util.Map;
 
 public interface EmployeeService {
-    List<Employee> getAllEmployees();
 
-    HashMap<Integer, Employee> getAllNew();
+    List<EmployeeDTO> getAllNew();
 
     double salarySum();
 
-    double minSalary();
+    EmployeeDTO minSalary();
 
-    double maxSalary();
+    EmployeeDTO maxSalary();
 
-    List<Employee> employeeHighSalary();
+    List<EmployeeDTO> employeeHighSalary();
 
-    void addEmployee();
+    List<EmployeeDTO> addEmployee(List<EmployeeDTO> employeeDTOS);
+    void update(int id, EmployeeDTO employeeDTO);
 
-    Employee getEmployeeById(int id);
+    EmployeeDTO getEmployeeById(int id);
 
     void deleteEmployee(int id);
 
-    List<Map.Entry<Integer, Employee>> salaryHigherThan(Integer than);
+    List<EmployeeDTO> salaryHigherThan(Integer than);
+    List<EmployeeDTO> withHighestSalary();
+    List<EmployeeDTO> getEmployee(String e);
+    EmployeeDTO getEmployeeFullInfo(int id);
+    List<EmployeeDTO> getEmployeesFromPage(int page);
 }
