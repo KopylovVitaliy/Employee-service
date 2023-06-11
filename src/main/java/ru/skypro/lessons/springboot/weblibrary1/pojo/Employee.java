@@ -11,6 +11,16 @@ public class Employee {
     private Integer id;
     private  String name;
     private  int salary;
+    @ManyToOne
+    private Position position;
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 
     public Employee(String name, int salary) {
         this.name = name;

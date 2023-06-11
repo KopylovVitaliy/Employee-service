@@ -5,14 +5,26 @@ public class EmployeeDTO {
     private Integer id;
     private String name;
     private Integer salary;
+    private String position;
 
-    public EmployeeDTO(Integer id, String name, Integer salary) {
+    public EmployeeDTO(Integer id, String name, Integer salary, String position) {
         this.id = id;
         this.name = name;
         this.salary = salary;
+        this.position = position;
     }
 
+    public void setSalary(Integer salary) {
+        this.salary = salary;
+    }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
     public EmployeeDTO() {
     }

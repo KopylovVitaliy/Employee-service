@@ -14,9 +14,9 @@ double salarySum();
 @Query("SELECT AVG(e.salary) from  Employee e")
 int employeeHighSalary();
 
-@Query("SELECT new ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO(e.id, e.name, e.salary) FROM Employee  e where  e.salary = (SELECT MIN(e.salary) from  Employee e)")
+@Query("SELECT new ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO(e.id, e.name, e.salary, e.position.position ) FROM Employee  e where  e.salary = (SELECT MIN(e.salary) from  Employee e)")
     Optional<EmployeeDTO> minSalary();
-@Query("SELECT new ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO(e.id, e.name, e.salary) FROM Employee  e where  e.salary = (SELECT MAX(e.salary) from  Employee e)")
+@Query("SELECT new ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO(e.id, e.name, e.salary, e.position.position) FROM Employee  e where  e.salary = (SELECT MAX(e.salary) from  Employee e)")
     Optional<EmployeeDTO> maxSalary();
 
 List<Employee> findEmployeeBySalaryIsGreaterThan(Integer salary);
