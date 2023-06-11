@@ -3,6 +3,7 @@ package ru.skypro.lessons.springboot.weblibrary1.service;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
@@ -137,6 +138,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findById(id)
                 .map(employeeMapper::toDto)
                 .orElseThrow(RuntimeException::new);
+
+    }
+    @Override
+    public List<EmployeeDTO> getEmployeesFromPage(int page){
+        return employeeRepository.findAll(PageRequest.of(page, 10))
+                .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
 
     }
 }
