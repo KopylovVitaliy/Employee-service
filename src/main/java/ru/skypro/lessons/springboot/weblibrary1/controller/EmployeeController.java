@@ -87,5 +87,6 @@ public class EmployeeController {
     @GetMapping("/page")
     public List<EmployeeDTO> getEmployeesFromPage(@RequestParam(required = false, defaultValue = "0")  int page) {
         return employeeService.getEmployeesFromPage(page);
+
     }
 }
