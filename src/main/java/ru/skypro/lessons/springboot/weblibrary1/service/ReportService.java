@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ReportService {
-    List<ReportDTO> createReport() throws IOException;
+    Integer createReport() throws IOException;
+
     void upload(File file) throws IOException, ClassNotFoundException;
+
     Report getReportById(int id);
 }

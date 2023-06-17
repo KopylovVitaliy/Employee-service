@@ -30,8 +30,9 @@ public class ReportServiceImpl implements ReportService {
         this.employeeService = employeeService;
         this.employeeMapper = employeeMapper;
     }
+
     @Override
-    public List<ReportDTO> createReport() throws IOException {
+    public Integer createReport() throws IOException {
         File file = new File("Report.json");
         String s = reportRepository.createReport().toString();
         try (FileOutputStream fileOutputStream = new FileOutputStream(file.getName());
@@ -41,23 +42,26 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report();
         report.setFile(file.getPath());
         reportRepository.save(report);
-        return reportRepository.createReport();
+        return report.getId();
     }
+
     @Override
-    public void upload(File file) throws IOException, ClassNotFoundException {
+    public void upload(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String content = readTextFromFile(file.getName());
-        List<EmployeeDTO> employeeDTOS = objectMapper.readValue(file, new TypeReference<>() {});
+        List<EmployeeDTO> employeeDTOS = objectMapper.readValue(file, new TypeReference<>() {
+        });
         employeeService.addEmployee(employeeDTOS);
 
     }
+
     @Override
-    public Report getReportById(int id){
-       return reportRepository.findById(id)
-               .orElseThrow();
+    public Report getReportById(int id) {
+        return reportRepository.findById(id)
+                .orElseThrow();
     }
 
-    private static String readTextFromFile(String fileName){
+    private static String readTextFromFile(String fileName) {
         Path path = Paths.get(fileName);
         try {
             return Files.lines(path)

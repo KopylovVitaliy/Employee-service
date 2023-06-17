@@ -27,7 +27,7 @@ public class ReportController {
     }
 
     @GetMapping("/report")
-    public List<ReportDTO> createReport() throws IOException {
+    public Integer createReport() throws IOException {
         return reportService.createReport();
     }
 
