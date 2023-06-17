@@ -11,17 +11,18 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class ReportDTO {
 
-    private Integer pos;
-    private Long count;
-    private Integer max;
-    private Integer min;
-    private Double avg;
+    private Integer position;
+    private Long countEmployees;
+    private Integer maxSalary;
+    private Integer minSalary;
+    private Double avgSalary;
 
     public ReportDTO(Integer pos, Long count, Integer max, Integer min, Double avg) {
-        this.pos = pos;
-        this.count = count;
-        this.max = max;
-        this.min = min;
-        this.avg = avg;
+        this.position = pos;
+        this.countEmployees = count;
+        this.maxSalary = max;
+        this.minSalary = min;
+        this.avgSalary = avg;
     }
+
 }
