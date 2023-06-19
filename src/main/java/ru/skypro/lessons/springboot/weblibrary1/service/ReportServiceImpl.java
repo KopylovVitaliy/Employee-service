@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.dto.ReportDTO;
-import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
@@ -40,7 +38,7 @@ public class ReportServiceImpl implements ReportService {
             objectOutputStream.writeObject(s);
         }
         Report report = new Report();
-        report.setFile(file.getPath());
+        report.setReportName(file.getPath());
         reportRepository.save(report);
         return report.getId();
     }

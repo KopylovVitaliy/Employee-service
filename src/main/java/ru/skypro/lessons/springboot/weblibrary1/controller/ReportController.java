@@ -1,8 +1,5 @@
 package ru.skypro.lessons.springboot.weblibrary1.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -10,20 +7,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.dto.ReportDTO;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeService;
 import ru.skypro.lessons.springboot.weblibrary1.service.ReportService;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,7 +41,7 @@ public class ReportController {
     }
     @GetMapping(value = "/report/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
-        String fileName = reportService.getReportById(id).getFile();
+        String fileName = reportService.getReportById(id).getReportName();
         String json = readTextFromFile(fileName);
 
         Resource resource = new ByteArrayResource(json.getBytes());
@@ -67,7 +58,7 @@ public class ReportController {
                     .collect(Collectors.joining());
         } catch (IOException ioException) {
             ioException.printStackTrace();
-            return "";
+            return "ошибка";
         }
     }
 

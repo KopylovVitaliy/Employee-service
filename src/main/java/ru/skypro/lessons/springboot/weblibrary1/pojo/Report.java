@@ -18,6 +18,6 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String file;
+    private String reportName;
 
 }
