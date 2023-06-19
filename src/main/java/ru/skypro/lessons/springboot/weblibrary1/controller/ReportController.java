@@ -12,6 +12,8 @@ import ru.skypro.lessons.springboot.weblibrary1.service.ReportService;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,8 +42,8 @@ public class ReportController {
        reportService.upload(file);
     }
     @GetMapping(value = "/report/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> downloadFile(@PathVariable int id) {
-        String fileName = reportService.getReportById(id).getReportName();
+    public ResponseEntity<Resource> downloadFile(@PathVariable int id) throws IOException {
+        String fileName = reportService.getReportById(id).getFile();
         String json = readTextFromFile(fileName);
 
         Resource resource = new ByteArrayResource(json.getBytes());
@@ -51,10 +53,9 @@ public class ReportController {
                 .body(resource);
     }
     private static String readTextFromFile(String fileName) {
-        Path path = Paths.get(fileName);
         try {
 
-            return Files.lines(path)
+            return Files.lines(Paths.get(fileName), Charset.forName("windows-1251"))
                     .collect(Collectors.joining());
         } catch (IOException ioException) {
             ioException.printStackTrace();
