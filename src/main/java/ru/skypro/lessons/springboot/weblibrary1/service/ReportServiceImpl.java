@@ -4,14 +4,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.weblibrary1.dto.ReportDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,21 +36,23 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Integer createReport() throws IOException {
         File file = new File("Report.json");
+
         String s = reportRepository.createReport().toString();
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file.getName());
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeObject(s);
-        }
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file.getName());
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+                objectOutputStream.writeObject(s);
+            }
         Report report = new Report();
-        report.setReportName(file.getPath());
+        report.setFile(file.getPath());
         reportRepository.save(report);
         return report.getId();
+
     }
+
 
     @Override
     public void upload(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String content = readTextFromFile(file.getName());
         List<EmployeeDTO> employeeDTOS = objectMapper.readValue(file, new TypeReference<>() {
         });
         employeeService.addEmployee(employeeDTOS);
@@ -67,6 +73,14 @@ public class ReportServiceImpl implements ReportService {
         } catch (IOException ioException) {
             ioException.printStackTrace();
             return "";
+        }
+    }
+    private static void writeTextToFile(String text, String fileName) {
+        Path path = Paths.get(fileName);
+        try {
+            Files.write(path, text.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 }
