@@ -35,17 +35,18 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Integer createReport() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
         File file = new File("Report.json");
-
-        String s = reportRepository.createReport().toString();
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file.getName());
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                objectOutputStream.writeObject(s);
-            }
         Report report = new Report();
+
+        String json = objectMapper.writeValueAsString(reportRepository.createReport());
+        Files.writeString(Paths.get(file.getName()), json);
+
         report.setFile(file.getPath());
         reportRepository.save(report);
+        report.setFile(report.getId() + file.getPath());
         return report.getId();
+
 
     }
 
@@ -75,6 +76,7 @@ public class ReportServiceImpl implements ReportService {
             return "";
         }
     }
+
     private static void writeTextToFile(String text, String fileName) {
         Path path = Paths.get(fileName);
         try {
