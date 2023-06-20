@@ -25,17 +25,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    @PostConstruct
-    public void init(){
-        employeeRepository.deleteAll();
-        employeeRepository.saveAll(
-                List.of(
-                        new Employee("Alena", 140000),
-                        new Employee("Polina", 200000),
-                        new Employee("Vlad", 100000)
-                )
-        );
-    }
+//    @PostConstruct
+//    public void init(){
+//        employeeRepository.deleteAll();
+//        employeeRepository.saveAll(
+//                List.of(
+//                        new Employee("Alena", 140000),
+//                        new Employee("Polina", 200000),
+//                        new Employee("Vlad", 100000)
+//                )
+//        );
+//    }
 
     @Override
     public List<EmployeeDTO> getAllNew() {
