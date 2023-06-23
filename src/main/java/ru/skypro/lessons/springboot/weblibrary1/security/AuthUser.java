@@ -19,7 +19,7 @@ public class AuthUser {
     private String username;
 
     private String password;
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<UserRole> userRoles;
 }
 
