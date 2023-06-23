@@ -29,12 +29,12 @@ public class ReportController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/report")
+    @GetMapping("admin/report")
     public Integer createReport() throws IOException {
         return reportService.createReport();
     }
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "admin/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadFile(@RequestParam("file")MultipartFile multipartFile) throws IOException, ClassNotFoundException {
        File file = new File(multipartFile.getName());
        Files.write(file.toPath(), multipartFile.getBytes());
