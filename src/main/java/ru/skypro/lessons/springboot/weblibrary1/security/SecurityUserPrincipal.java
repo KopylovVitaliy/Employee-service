@@ -3,17 +3,23 @@ package ru.skypro.lessons.springboot.weblibrary1.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SecurityUserPrincipal implements UserDetails {
     private AuthUser user;
+    private List<SecurityGrantedAuthorities> authoritiesList;
     public SecurityUserPrincipal(AuthUser user) {
         this.user = user;
+        this.authoritiesList = user.getUserRoles().stream()
+                .map(SecurityGrantedAuthorities::new)
+                .toList();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return new ArrayList<>(authoritiesList);
     }
 
     @Override

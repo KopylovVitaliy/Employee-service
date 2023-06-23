@@ -1,6 +1,5 @@
 package ru.skypro.lessons.springboot.weblibrary1.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,27 +22,22 @@ import javax.sql.DataSource;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-    @Bean
-    public UserDetailsManager userDetailsManager(DataSource dataSource,
-                                                 AuthenticationManager authenticationManager) {
 
-        JdbcUserDetailsManager jdbcUserDetailsManager =
-                new JdbcUserDetailsManager(dataSource);
-
-        jdbcUserDetailsManager.setAuthenticationManager(authenticationManager);
-        return jdbcUserDetailsManager;
-    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
