@@ -32,7 +32,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDTO> getAllNew() {
-        return null;
+        return employeeRepository.findAll()
+                .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
