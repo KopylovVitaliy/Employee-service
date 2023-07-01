@@ -5,9 +5,9 @@ import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeService;
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 @RestController

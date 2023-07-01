@@ -2,21 +2,25 @@ package ru.skypro.lessons.springboot.weblibrary1.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.dto.ReportDTO;
+
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 
 import java.io.*;
-import java.nio.charset.Charset;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +29,7 @@ public class ReportServiceImpl implements ReportService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeService employeeService;
     private final EmployeeMapper employeeMapper;
+    Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
 
     public ReportServiceImpl(ReportRepository reportRepository, EmployeeRepository employeeRepository, EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.reportRepository = reportRepository;
@@ -35,6 +40,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Integer createReport() throws IOException {
+        logger.debug("Метод создания Report");
         ObjectMapper objectMapper = new ObjectMapper();
         File file = new File("Report.json");
         Report report = new Report();
@@ -53,6 +59,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void upload(File file) throws IOException {
+        logger.debug("Метод загрузки сотрудников из файла.");
         ObjectMapper objectMapper = new ObjectMapper();
         List<EmployeeDTO> employeeDTOS = objectMapper.readValue(file, new TypeReference<>() {
         });
@@ -62,6 +69,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Report getReportById(int id) {
+        logger.debug("Метод поиска репорта по id {}", id);
         return reportRepository.findById(id)
                 .orElseThrow();
     }
