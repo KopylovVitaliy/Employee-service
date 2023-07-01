@@ -40,24 +40,9 @@ public class EmployeeController {
         return employeeService.employeeHighSalary();
     }
 
-    @PostMapping
-    public List<EmployeeDTO> addNewEmployee(@RequestBody List<EmployeeDTO> employeeDTOS) {
-        return employeeService.addEmployee(employeeDTOS);
-    }
-
-    @PutMapping("/{id}")
-    public void editEmployee(@PathVariable int id, @RequestBody EmployeeDTO employeeDTO) {
-        employeeService.update(id, employeeDTO);
-    }
-
     @GetMapping("/{id}")
     public EmployeeDTO getEmployeeById(@PathVariable int id) {
         return employeeService.getEmployeeById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable int id) {
-        employeeService.deleteEmployee(id);
     }
 
     @GetMapping("/all-employee-new")
