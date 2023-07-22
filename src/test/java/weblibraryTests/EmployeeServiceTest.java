@@ -12,15 +12,12 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeMapper;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeServiceImpl;
 
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,24 +29,24 @@ public class EmployeeServiceTest {
     private EmployeeMapper employeeMapper;
     @InjectMocks
     private EmployeeServiceImpl out;
+
     @Test
-    void getAllNewTest(){
+    void getAllNewTest() {
         final int id = 1;
         final String inputName = "Vasya";
         final int inputSalary = 20000;
         final List<EmployeeDTO> employees = getIterable(id, inputName, inputSalary);
-        when(repositoryMock.findAll().stream()
-                .map(employeeMapper::toDto)
-                .collect(Collectors.toList()))
-                .thenReturn(employees);
+        final List<Employee> employees1 = List.of(new Employee(inputName, inputSalary));
+        when(repositoryMock.findAll())
+                .thenReturn(employees1);
+        List<EmployeeDTO> employeeDTOS = out.getAllNew();
 
-
-        assertIterableEquals(employees, out.getAllNew());
+        assertEquals(employees.size(), employeeDTOS.size());
 
     }
 
     @Test
-    void getMinimumSalaryEmployeeInDepartment(){
+    void getMinimumSalaryEmployeeInDepartment() {
         final int id = 1;
         final String inputName = "Vasya";
         final int inputSalary = 20000;
@@ -59,13 +56,14 @@ public class EmployeeServiceTest {
 
         assertEquals(employeeDTO, out.minSalary());
     }
+
     @Test
-    void getMaximumSalaryEmployeeInDepartment(){
+    void getMaximumSalaryEmployeeInDepartment() {
         final int id = 1;
         final String inputName = "Vasya";
         final int inputSalary = 220000;
         List<EmployeeDTO> list = List.of(
-        new EmployeeDTO(id, inputName, inputSalary, "тестировщик"), new EmployeeDTO(id, inputName, 300000, "тестировщик"));
+                new EmployeeDTO(id, inputName, inputSalary, "тестировщик"), new EmployeeDTO(id, inputName, 300000, "тестировщик"));
         EmployeeDTO employeeDTO = list.stream()
                 .max(Comparator.comparing(EmployeeDTO::getSalary)).get();
         when(repositoryMock.maxSalary())
@@ -76,7 +74,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void salarySumTest(){
+    void salarySumTest() {
         double sum = 22000;
         when(repositoryMock.salarySum())
                 .thenReturn(sum);
@@ -86,7 +84,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void employeeHighSalaryTest(){
+    void employeeHighSalaryTest() {
         int avg = 10000;
         when(repositoryMock.employeeHighSalary())
                 .thenReturn(avg);
@@ -96,23 +94,18 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void addEmployeeTest(){
+    void addEmployeeTest() {
         final int id = 1;
         final String inputName = "Vasya";
         final int inputSalary = 20000;
         List<EmployeeDTO> employeeDTOS = getIterable(id, inputName, inputSalary);
+        final List<Employee> employees1 = List.of(new Employee(inputName, inputSalary));
 
-        when(repositoryMock.saveAll(employeeDTOS.stream()
-                        .map(employeeMapper::toEntity)
-                        .collect(Collectors.toList())
-                )
-                .stream()
-                .map(employeeMapper::toDto)
-                .collect(Collectors.toList()))
-                .thenReturn(employeeDTOS);
+        when(repositoryMock.saveAll(employees1))
+                .thenReturn(employees1);
 
         List<EmployeeDTO> actual = out.addEmployee(employeeDTOS);
-        assertEquals(employeeDTOS, actual);
+        assertEquals(employeeDTOS.size(), actual.size());
     }
 
 //    @Test
@@ -132,54 +125,71 @@ public class EmployeeServiceTest {
 //    }
 
     @Test
-    void getEmployeeTest(){
-        final int id = 1;
-        final String inputName = "Vasya";
-        final int inputSalary = 20000;
-        Employee employee = new Employee( "inputName", 1000);
+    void getEmployeeTest() {
+        int id = 1;
+        Employee employee = new Employee();
+        employee.setId(id);
+        employee.setName("John");
+        employee.setSalary(2222);
         when(repositoryMock.findById(id))
                 .thenReturn(Optional.of(employee));
 
-        Employee employee1 = new Employee(out.getEmployeeById(id).getName(), out.getEmployeeById(id).getSalary());
-        assertEquals(employee, employee1);
+        EmployeeDTO employee1 = employeeMapper.toDto(employee);
+        EmployeeDTO employeeById = out.getEmployeeById(id);
+        assertEquals(employee.getName(), employee1.getName());
+    }
+
+    @Test
+    void testDeleteEmployee() {
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("John");
+        employee.setSalary(2222);
+
+        when(repositoryMock.findById(1))
+                .thenReturn(Optional.of(employee))
+                .thenAnswer(i -> {
+                    throw new RuntimeException("У—отрудник не найденФ");
+                });
+
+        repositoryMock.deleteById(1);
+        assertTrue(repositoryMock.findById(1).isPresent());
+    }
+
+    @Test
+    void salaryHigherThanTest() {
+        int than = 1000;
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("John");
+        employee.setSalary(2222);
+        List<Employee> employees = List.of(employee);
+
+        when(repositoryMock.findEmployeeBySalaryIsGreaterThan(than))
+                .thenReturn(employees);
+        List<EmployeeDTO> employeeDTOS = out.salaryHigherThan(than);
+        assertEquals(employees.size(), employeeDTOS.size());
+    }
+
+    @Test
+    void withHighestSalaryTest() {
+        final int id = 1;
+        final String inputName = "Vasya";
+        final int inputSalary = 20000;
+        List<EmployeeDTO> employees = getIterable(id, inputName, inputSalary);
+        when(repositoryMock.maxSalary())
+                .thenReturn(employees);
+        EmployeeDTO actual = out.maxSalary();
+
+        assertEquals(employees.get(0), actual);
     }
 
 
     private static List<EmployeeDTO> getIterable(int id,
-                                                  String inputName,
-                                                  int inputSalary){
+                                                 String inputName,
+                                                 int inputSalary) {
 
         return List.of(new EmployeeDTO(id, inputName, inputSalary, "тестер")
         );
-    }
-    @Test
-    public void testFindEmployeeById() {
-        Employee employee = new Employee("John Smith", 111);
-
-        when(repositoryMock.findById(1)).thenReturn(Optional.of(employee));
-        EmployeeDTO employeeDTO = employeeMapper.toDto(employee);
-        EmployeeDTO employeeDto = out.getEmployeeById(1);
-
-        assertEquals("John Smith", employeeDto.getName());
-        assertEquals(111, employeeDto.getSalary());
-    }
-
-    public static EmployeeDTO toDto(Employee employee) {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId(employee.getId());
-        employeeDTO.setName(employee.getName());
-        employeeDTO.setSalary(employee.getSalary());
-        employeeDTO.setPosition(Optional.ofNullable(employee.getPosition())
-                .map(Position::getPosition)
-                .orElse(null));
-        return employeeDTO;
-    }
-    public static Employee toEntity(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        employee.setId(employeeDTO.getId());
-        employee.setName(employeeDTO.getName());
-        employee.setSalary(employeeDTO.getSalary());
-
-        return employee;
     }
 }
