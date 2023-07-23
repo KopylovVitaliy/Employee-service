@@ -2,6 +2,8 @@ package ru.skypro.lessons.springboot.weblibrary1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Objects;
+
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class EmployeeDTO {
 
@@ -65,6 +67,19 @@ public class EmployeeDTO {
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeDTO that = (EmployeeDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(salary, that.salary) && Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, salary, position);
     }
 }
 
