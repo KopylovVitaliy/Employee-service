@@ -1,23 +1,34 @@
 package weblibraryTests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeMapper;
 
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeServiceImpl;
+import ru.skypro.lessons.springboot.weblibrary1.service.ReportServiceImpl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,13 +36,14 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
-
     @Mock
     private EmployeeRepository repositoryMock;
     @Spy
     private EmployeeMapper employeeMapper;
     @InjectMocks
     private EmployeeServiceImpl employeeService;
+    @InjectMocks
+    private ReportServiceImpl out;
 
     @Test
     void getAllNewTest() {
@@ -161,19 +173,20 @@ public class EmployeeServiceTest {
 
     @Test
     void testDeleteEmployee() {
+        int id = 1;
         Employee employee = new Employee();
-        employee.setId(1);
+        employee.setId(id);
         employee.setName("John");
         employee.setSalary(2222);
 
         when(repositoryMock.findById(1))
-                .thenReturn(Optional.of(employee))
-                .thenAnswer(i -> {
-                    throw new RuntimeException("У—отрудник не найденФ");
-                });
+                .thenReturn(Optional.of(employee));
 
-        repositoryMock.deleteById(1);
-        assertTrue(repositoryMock.findById(1).isPresent());
+      employeeService.deleteEmployee(id);
+
+      verify(repositoryMock, times(1)).delete(employee);
+
+
     }
 
     @Test
@@ -237,7 +250,21 @@ public class EmployeeServiceTest {
         List<Employee> actual = repositoryMock.findAll().stream().limit(page).toList();
         assertEquals(actual.size(), page);
 
+    }    @Test
+    public void ShouldAddEmployeeFromFileToDB() throws IOException {
+        List<EmployeeDTO> employeeDTOExpected = List.of(new EmployeeDTO(3, "Irina", 150000, "Analyst"));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(employeeDTOExpected);
+        MockMultipartFile file = new MockMultipartFile("employee", "employee.json", MediaType.MULTIPART_FORM_DATA_VALUE, json.getBytes());
+        List<EmployeeDTO> actual = objectMapper.readValue(json, new TypeReference<>() {
+        });
+        assertEquals(employeeDTOExpected, actual);
+
+
     }
+
+
 
     private static List<EmployeeDTO> getIterable(int id,
                                                  String inputName,
@@ -245,5 +272,15 @@ public class EmployeeServiceTest {
 
         return List.of(new EmployeeDTO(id, inputName, inputSalary, "тестер")
         );
+    }
+    private static String readTextFromFile(String fileName) {
+        try {
+
+            return Files.lines(Paths.get(fileName), Charset.forName("windows-1251"))
+                    .collect(Collectors.joining());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return "ошибка";
+        }
     }
 }

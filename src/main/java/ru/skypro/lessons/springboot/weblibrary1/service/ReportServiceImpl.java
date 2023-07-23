@@ -44,7 +44,7 @@ public class ReportServiceImpl implements ReportService {
         ObjectMapper objectMapper = new ObjectMapper();
         File file = new File("Report.json");
         Report report = new Report();
-
+        report.setId(1);
         String json = objectMapper.writeValueAsString(reportRepository.createReport());
         Files.writeString(Paths.get(file.getName()), json);
 
