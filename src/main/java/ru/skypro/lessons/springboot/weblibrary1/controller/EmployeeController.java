@@ -36,7 +36,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/salary/high-salary")
-    public List<EmployeeDTO> getEmployeeHighSalary() {
+    public Integer getEmployeeHighSalary() {
         return employeeService.employeeHighSalary();
     }
 

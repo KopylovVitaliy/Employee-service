@@ -54,15 +54,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO maxSalary() {
         logger.debug("Метод поиска максимальной зарплаты среди сотрудников.");
-        List<EmployeeDTO> withHighestSalary = withHighestSalary();
-        return withHighestSalary.get(0);
+        return employeeRepository.maxSalary().stream()
+                .max(Comparator.comparing(EmployeeDTO::getSalary)).get();
     }
 
     @Override
-    public List<EmployeeDTO> employeeHighSalary() {
+    public Integer employeeHighSalary() {
         logger.debug("Метод поиска средней зарплаты среди сотрудников.");
-        int avg = employeeRepository.employeeHighSalary();
-        return salaryHigherThan(avg);
+        return employeeRepository.employeeHighSalary();
     }
 
     @Override
