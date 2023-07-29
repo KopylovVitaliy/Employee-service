@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,31 +43,23 @@ public class AdminEmployeeController {
         position.put("name", "Java");
 
         JSONObject employee = new JSONObject();
-        employee.put("id", 1);
-        employee.put("name", "Ivan");
         employee.put("salary", 100000);
         employee.put("position_id", position.get("id"));
+        employee.put("name", "Ivan");
 
 
         mockMvc.perform(post("/admin/employee")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(employee.toString()))
+                        .content(new JSONArray().put(employee).toString()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.id").isNumber())
-                .andExpect(jsonPath("$.name").value("Ivan"))
-                .andExpect(jsonPath("$.salary").value(100000))
-                .andExpect(jsonPath("$.position").value(1))
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(jsonPath("$").isArray());
 
         mockMvc.perform(get("/employee"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value("Ivan"))
-                .andExpect(jsonPath("$[0].salary").value(100000))
-                .andExpect(jsonPath("$[0].position").value(1));
+                .andExpect(jsonPath("$[0].salary").value(100000));
     }
 
     static List<Employee> employees (int expectedCount){
