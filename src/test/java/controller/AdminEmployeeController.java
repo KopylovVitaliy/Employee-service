@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.skypro.lessons.springboot.weblibrary1.WebLibrary1Application;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 
 @SpringBootTest(classes = WebLibrary1Application.class)
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AdminEmployeeController {
     @Autowired
     private MockMvc mockMvc;
@@ -82,10 +84,12 @@ public class AdminEmployeeController {
                 .andReturn().getResponse().getContentAsString();
 
         JSONObject createdEmployee = new JSONObject(String.valueOf(employee));
-        int id = createdEmployee.getInt("id");
+
+        int id = employee.getInt("id");
         createdEmployee.put("salary", 90000);
         createdEmployee.put("position_id", position.get("id"));
         createdEmployee.put("name", "Polina");
+
         mockMvc.perform(put("/admin/employee/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createdEmployee.toString()))
@@ -130,6 +134,7 @@ public class AdminEmployeeController {
         mockMvc.perform(get("/employee/{id}", id))
                 .andExpect(status().isForbidden());
     }
+
 
     static List<Employee> employees(int expectedCount) {
         return Stream.generate(() ->
