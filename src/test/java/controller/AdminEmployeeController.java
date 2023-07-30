@@ -1,5 +1,7 @@
 package controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -15,9 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.skypro.lessons.springboot.weblibrary1.WebLibrary1Application;
-import ru.skypro.lessons.springboot.weblibrary1.controller.EmployeeController;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
-import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 
 import java.util.List;
@@ -62,7 +62,76 @@ public class AdminEmployeeController {
                 .andExpect(jsonPath("$[0].salary").value(100000));
     }
 
-    static List<Employee> employees (int expectedCount){
+    @Test
+    void givenNoUsersInDatabase_whenUserAddedAndUpdate_thenItExistsInList() throws Exception {
+        JSONObject position = new JSONObject();
+        position.put("id", 1);
+        position.put("name", "Java");
+
+        JSONObject employee = new JSONObject();
+        employee.put("id", 1);
+        employee.put("salary", 100000);
+        employee.put("position_id", position.get("id"));
+        employee.put("name", "Ivan");
+
+        mockMvc.perform(post("/admin/employee")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new JSONArray().put(employee).toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andReturn().getResponse().getContentAsString();
+
+        JSONObject createdEmployee = new JSONObject(String.valueOf(employee));
+        int id = createdEmployee.getInt("id");
+        createdEmployee.put("salary", 90000);
+        createdEmployee.put("position_id", position.get("id"));
+        createdEmployee.put("name", "Polina");
+        mockMvc.perform(put("/admin/employee/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createdEmployee.toString()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/employee/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("Polina"))
+                .andExpect(jsonPath("$.salary").value(90000));
+    }
+
+    @Test
+    void givenNoUsersInDatabase_whenUserAddedAndDelete_thenItExistsInList() throws Exception {
+        JSONObject position = new JSONObject();
+        position.put("id", 1);
+        position.put("name", "Java");
+
+        JSONObject employee = new JSONObject();
+        employee.put("id", 1);
+        employee.put("salary", 100000);
+        employee.put("position_id", position.get("id"));
+        employee.put("name", "Ivan");
+
+        mockMvc.perform(post("/admin/employee")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new JSONArray().put(employee).toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andReturn().getResponse().getContentAsString();
+        int id = employee.getInt("id");
+        mockMvc.perform(get("/employee/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("Ivan"))
+                .andExpect(jsonPath("$.salary").value(100000));
+        mockMvc.perform(delete("/admin/employee/{id}", id))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/employee/{id}", id))
+                .andExpect(status().isForbidden());
+    }
+
+    static List<Employee> employees(int expectedCount) {
         return Stream.generate(() ->
                         new Employee("Petr", 12000))
                 .limit(expectedCount)
