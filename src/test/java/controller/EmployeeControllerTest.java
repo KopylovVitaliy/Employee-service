@@ -37,16 +37,17 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @BeforeEach
-    private void cleanData() {
-        employeeRepository.deleteAll();
-
-    }
+//    @BeforeEach
+//    private void cleanData() {
+//        employeeRepository.deleteAll();
+//
+//    }
 
     @Test
     @SneakyThrows
     void getEmployeesTest() {
         int expectedCount = 5;
+        employeeRepository.deleteAll();
         mockMvc.perform(get("/employee"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -205,7 +206,7 @@ public class EmployeeControllerTest {
 
     @Test
     void getAllEmployee() throws Exception {
-
+        employeeRepository.deleteAll();
         JSONObject employee1 = new JSONObject();
         employee1.put("id", 1);
         employee1.put("name", "Kate");
@@ -234,18 +235,19 @@ public class EmployeeControllerTest {
 
     @Test
     void getEmployeeFullInfo() throws Exception {
+        employeeRepository.deleteAll();
         JSONObject position = new JSONObject();
         position.put("id", 1);
         position.put("name", "Java");
 
         JSONObject employee1 = new JSONObject();
-        employee1.put("id", 1);
+        employee1.put("id", 6);
         employee1.put("name", "Ivan");
         employee1.put("salary", 100000);
         employee1.put("position_id", position.getInt("id"));
 
         JSONObject employee2 = new JSONObject();
-        employee2.put("id", 2);
+        employee2.put("id", 7);
         employee2.put("name", "Polina");
         employee2.put("salary", 120000);
         employee2.put("position_id", position.getInt("id"));
@@ -262,7 +264,7 @@ public class EmployeeControllerTest {
         int id = employee2.getInt("id");
         mockMvc.perform(get("/employee/{id}/fullInfo", id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.id").value(7))
                 .andExpect(jsonPath("$.name").value("Polina"))
                 .andExpect(jsonPath("$.salary").value(120000));
     }

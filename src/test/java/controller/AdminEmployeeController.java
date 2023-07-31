@@ -71,7 +71,7 @@ public class AdminEmployeeController {
         position.put("name", "Java");
 
         JSONObject employee = new JSONObject();
-        employee.put("id", 1);
+        employee.put("id", 14);
         employee.put("salary", 100000);
         employee.put("position_id", position.get("id"));
         employee.put("name", "Ivan");
@@ -110,7 +110,7 @@ public class AdminEmployeeController {
         position.put("name", "Java");
 
         JSONObject employee = new JSONObject();
-        employee.put("id", 1);
+        employee.put("id", 13);
         employee.put("salary", 100000);
         employee.put("position_id", position.get("id"));
         employee.put("name", "Ivan");
