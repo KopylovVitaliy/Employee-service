@@ -50,10 +50,6 @@ public class EmployeeController {
         return employeeService.getAllNew();
     }
 
-    @GetMapping("salaryHigherThan")
-    public List<EmployeeDTO> salaryHigherThan(@RequestParam("salary") Integer compareSalary) {
-        return employeeService.salaryHigherThan(compareSalary);
-    }
     @GetMapping("withHighestSalary")
     public List<EmployeeDTO> salaryWithHighestSalary() {
         return employeeService.withHighestSalary();

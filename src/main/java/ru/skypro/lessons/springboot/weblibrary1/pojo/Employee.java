@@ -1,11 +1,17 @@
 package ru.skypro.lessons.springboot.weblibrary1.pojo;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "employee")
+@Setter
+@Getter
+@Accessors(chain = true)
 public class Employee {
 
     @Id
@@ -34,27 +40,6 @@ public class Employee {
 
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getSalary() {
-        return salary;
-    }
-    public int getId(){
-        return id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {
