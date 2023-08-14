@@ -67,7 +67,7 @@ public class EmployeeServiceTest {
         final int id = 1;
         final String inputName = "Vasya";
         final int inputSalary = 20000;
-        EmployeeDTO employeeDTO = new EmployeeDTO(id, inputName, inputSalary, "тестировщик");
+        EmployeeDTO employeeDTO = new EmployeeDTO(id, inputName, inputSalary, "java");
         when(repositoryMock.minSalary())
                 .thenReturn(Optional.of(employeeDTO));
 
@@ -80,7 +80,7 @@ public class EmployeeServiceTest {
         final String inputName = "Vasya";
         final int inputSalary = 220000;
         List<EmployeeDTO> list = List.of(
-                new EmployeeDTO(id, inputName, inputSalary, "тестировщик"), new EmployeeDTO(id, inputName, 300000, "тестировщик"));
+                new EmployeeDTO(id, inputName, inputSalary, "java"), new EmployeeDTO(id, inputName, 300000, "java"));
         EmployeeDTO employeeDTO = list.stream()
                 .max(Comparator.comparing(EmployeeDTO::getSalary)).get();
         when(repositoryMock.maxSalary())
@@ -138,7 +138,7 @@ public class EmployeeServiceTest {
         final String inputName = "Vasya";
         final int inputSalary = 20000;
 
-        EmployeeDTO actual = new EmployeeDTO(id, "inputName", 1000, "тестер");
+        EmployeeDTO actual = new EmployeeDTO(id, "inputName", 1000, "java");
         Employee employee = new Employee(inputName, inputSalary);
         employee.setId(id);
 
@@ -270,7 +270,7 @@ public class EmployeeServiceTest {
                                                  String inputName,
                                                  int inputSalary) {
 
-        return List.of(new EmployeeDTO(id, inputName, inputSalary, "тестер")
+        return List.of(new EmployeeDTO(id, inputName, inputSalary, "java")
         );
     }
     private static String readTextFromFile(String fileName) {
@@ -280,7 +280,7 @@ public class EmployeeServiceTest {
                     .collect(Collectors.joining());
         } catch (IOException ioException) {
             ioException.printStackTrace();
-            return "ошибка";
+            return "error";
         }
     }
 }
